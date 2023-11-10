@@ -6,13 +6,6 @@ import Breadcrumb from "../../components/breadcrumb/index";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
-import ButtonGroup from "../../components/Projects/ButtonGroup/ButtonGroup";
-import ButtonTask from "../../components/Tasks/ButtonTask/ButtonTask";
-import Activities from "../../components/Tasks/Activities/Activities";
-import Comments from "../../components/Tasks/Comments/Comments";
-import File from "../../components/Tasks/File/File";
-import Members from "../../components/Tasks/Members/Members";
-import Screenshots from "../../components/Tasks/Screenshots/Screenshots";
 import Spacer from "../../components/spacer";
 import moment from "moment";
 import Loading from "../../components/loading";
@@ -243,7 +236,6 @@ const Project = () => {
           </>
         ) : (
           <>
-            <ButtonGroup projectId={data.project._id} selectedTab="tasks" />
             <div className="row">
               <div className="col-12">
                 <div className="card pageContainer">
@@ -335,51 +327,7 @@ const Project = () => {
 
                             <Spacer height={60} />
 
-                            <ButtonTask setTab={setTab} tab={tab} />
-                            {tab === "activities" ? (
-                              <Activities
-                                activities={data.activities}
-                                handleStatus={handleStatus}
-                                onUpdateActivities={updateActivities}
-                                projectId={data.project._id}
-                                taskId={data.task._id}
-                                task={data.task}
-                              />
-                            ) : tab === "comments" ? (
-                              <Comments
-                                comments={data.comments}
-                                onUpdateComments={updateComments}
-                                projectId={data.project._id}
-                                taskId={data.task._id}
-                                task={data.task}
-                              />
-                            ) : tab === "file" ? (
-                              <File
-                                files={data.files}
-                                onUpdateFiles={updateFiles}
-                                projectId={data.project._id}
-                                taskId={data.task._id}
-                                task={data.task}
-                              />
-                            ) : tab === "screenshots" ? (
-                              <Screenshots
-                                screenshots={data.screenshots}
-                                onUpdateScreenshots={updateScreenshots}
-                                projectId={data.project._id}
-                                taskId={data.task._id}
-                                task={data.task}
-                              />
-                            ) : tab === "members" ? (
-                              <Members
-                                members={data.members}
-                                onUpdateMembers={updateMembers}
-                                projectId={data.project._id}
-                                taskId={data.task._id}
-                                task={data.task}
-                              />
-                            ) : (
-                              <></>
-                            )}
+                           
                           </div>
                         </div>
 

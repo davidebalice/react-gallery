@@ -25,13 +25,14 @@ export function AdminRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
+        <Route path="/gallery/" element={<Gallery />} />
         <Route path="/gallery/:id" element={<Gallery />} />
         <Route path="/photo/:id" element={<Photo />} />
         <Route path="/add/gallery/:id" element={<AddPhoto />} />
         <Route path="/edit/gallery/:id" element={<EditPhoto />} />
 
         <Route path="/categories" element={<Categories />} />
-        <Route path="/add/category/:id" element={<AddCategory />} />
+        <Route path="/add/category/" element={<AddCategory />} />
         <Route path="/edit/category/:id" element={<EditCategory />} />
 
         <Route path="/users" element={<Users />} />

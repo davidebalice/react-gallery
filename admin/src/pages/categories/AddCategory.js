@@ -8,11 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, Link } from "react-router-dom";
 
-const AddUser = () => {
+const AddCategory = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
   const { userData, demo } = useContext(Context);
-  const title = "Add user";
+  const title = "Add category";
   const brad = [
     {
       name: "home",
@@ -24,11 +24,6 @@ const AddUser = () => {
   const [responseData, setResponseData] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
-    surname: "",
-    email: "",
-    role: "",
-    password: "",
-    passwordConfirm: "",
   });
 
   const handleInput = (event) => {
@@ -50,7 +45,7 @@ const AddUser = () => {
       });
     } else {
       axios
-        .post(process.env.REACT_APP_API_BASE_URL + "/api/add/user", formData, {
+        .post(process.env.REACT_APP_API_BASE_URL + "/api/add/category", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -61,7 +56,7 @@ const AddUser = () => {
           setResponseData(response.data.message);
 
           if (response.data.message === "success") {
-            navigate(`/users`);
+            navigate(`/categories`);
           }
         })
         .catch((error) => {
@@ -77,7 +72,7 @@ const AddUser = () => {
         <>
           <div className="page">
             <div class="row">
-              <Link to={`/users`}>
+              <Link to={`/categories`}>
                 <div class="backButton col-sm-4 col-md-4 col-lg-3">
                   <FontAwesomeIcon
                     icon={faCircleChevronLeft}
@@ -91,22 +86,10 @@ const AddUser = () => {
             <div className="card">
               <div className="card-body">
                 <div className="row justify-content-center formContainer">
-                  <div className="col-md-6 mt-3">
+                 
+                <div className="col-md-6 mt-3">
                     <label for="name">
-                      <b>Surname</b>
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="surname"
-                      required
-                      value={formData.surname}
-                      onChange={handleInput}
-                    />
-                  </div>
-                  <div className="col-md-6 mt-3">
-                    <label for="name">
-                      <b>Name</b>
+                      <b>Category</b>
                     </label>
                     <input
                       type="text"
@@ -118,60 +101,12 @@ const AddUser = () => {
                     />
                   </div>
                   <div className="col-md-6 mt-3">
-                    <label for="priority">
-                      <b>Email</b>
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleInput}
-                    />
+                   
                   </div>
-                  <div className="col-md-6 mt-3">
-                    <label for="role">
-                      <b>Role</b>
-                    </label>
-                    <select
-                      className="form-control"
-                      name="role"
-                      value={formData.role}
-                      required
-                      onChange={handleInput}
-                    >
-                      <option value=""> - Select role - </option>
-                      <option value="admin">Admin</option>
-                      <option value="user">User</option>
-                    </select>
-                  </div>
-                  <div className="col-md-6 mt-3">
-                    <label for="name">
-                      <b>Password</b>
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      name="password"
-                      required
-                      value={formData.password}
-                      onChange={handleInput}
-                    />
-                  </div>
-                  <div className="col-md-6 mt-3">
-                    <label for="name">
-                      <b>Confirm password</b>
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      name="passwordConfirm"
-                      required
-                      value={formData.passwordConfirm}
-                      onChange={handleInput}
-                    />
-                  </div>
+                 
+              
+                  
+            
                 </div>
 
                 <button
@@ -179,7 +114,7 @@ const AddUser = () => {
                   className="btn saveButton btn-sm mt-5"
                 >
                   <FontAwesomeIcon icon={faPlus} className="saveButtonIcon" />{" "}
-                  Add User
+                  Add category
                 </button>
               </div>
             </div>
@@ -194,4 +129,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default AddCategory;

@@ -7,7 +7,6 @@ import Breadcrumb from "../../components/breadcrumb/index";
 import Table from "react-bootstrap/Table";
 import Swal from "sweetalert2";
 import Loading from "../../components/loading";
-import ButtonGroup from "../../components/Projects/ButtonGroup/ButtonGroup";
 import EmailModal from "../../components/Modal/EmailModal";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -23,9 +22,11 @@ import {
 
 const Gallery = () => {
   const { id } = useParams();
+  const [urlapi, setUrlapi] = useState(
+    `${process.env.REACT_APP_API_BASE_URL}/api/gallery/`
+  );
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [client, setClient] = useState([]);
   const [reload, setReload] = useState(1);
   const token = localStorage.getItem("authToken");
   const { userData, demo } = useContext(Context);
@@ -36,17 +37,18 @@ const Gallery = () => {
     email: "",
   });
 
-  const openEmailModal = (email, name, surname) => {
-    setModalData({ show: true, email, name, surname });
-  };
-
   const closeEmailModal = () => {
     setModalData(false, null, null);
   };
 
   useEffect(() => {
+    if (id) {
+      setUrlapi(`${process.env.REACT_APP_API_BASE_URL}/api/gallery/${id}`);
+    } else {
+      setUrlapi(`${process.env.REACT_APP_API_BASE_URL}/api/gallery/`);
+    }
     axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/api/tasks/${id}`, {
+      .get(urlapi, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -54,20 +56,17 @@ const Gallery = () => {
         },
       })
       .then((response) => {
-        console.log("response.data.tasks");
-        console.log(response.data.tasks);
-        console.log("response.data.client");
-        console.log(response.data.client);
+        console.log("response.data.gallery");
+        console.log(response.data.gallery);
         setLoading(false);
-        setData(response.data.tasks);
-        setClient(response.data.client);
+        setData(response.data.gallery);
       })
       .catch((error) => {
         console.error("Error during api call:", error);
       });
   }, [token, reload]);
 
-  const title = "Tasks";
+  const title = "Gallery";
   const brad = [
     {
       name: "home",
@@ -77,7 +76,7 @@ const Gallery = () => {
     },
   ];
 
-  function deleteTask(id) {
+  function deletePhoto(id) {
     Swal.fire({
       title: "Confirm delete?",
       text: "",
@@ -97,7 +96,7 @@ const Gallery = () => {
         } else {
           axios
             .post(
-              `${process.env.REACT_APP_API_BASE_URL}/api/task/delete/${id}`,
+              `${process.env.REACT_APP_API_BASE_URL}/api/gallery/delete/${id}`,
               { id: id },
               {
                 headers: {
@@ -137,115 +136,36 @@ const Gallery = () => {
           </>
         ) : (
           <>
-            <ButtonGroup projectId={id} selectedTab="tasks" />
             <div className="row">
               <div className="col-12">
                 <div className="card pageContainer">
                   <div className="card-body">
-                    <Link to={`/project/add/task/${id}`}>
+                    <Link to={`/add/gallery/${id}`}>
                       <div className="addButton col-sm-4 col-md-4 col-lg-3">
                         <FontAwesomeIcon
                           icon={faCirclePlus}
                           className="addButtonIcon"
                         />
-                        <div className="card-body d-flex px-1">Add task</div>
+                        <div className="card-body d-flex px-1">Add photo</div>
                       </div>
                     </Link>
                     <Table className="tableRow" bordered hover>
                       <thead>
                         <tr>
-                          <th>Date</th>
-                          <th>Last update</th>
-                          <th>Name</th>
-                          <th>Status</th>
-                          <th>Priority</th>
-                          <th>Label</th>
-                          <th>Activities</th>
-                          <th>Progress</th>
-                          <th>Dead line</th>
+                          <th>Photo</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
 
                       <tbody>
                         {data.length === 0 && (
-                          <p className="my-5">Task not found</p>
+                          <p className="my-5">Gallery not found</p>
                         )}
-                        {data.map((task) => {
-                          const totalActivities = task.activities.length;
-                          const completedActivities = task.activities.filter(
-                            (activity) => activity.status === "Done"
-                          ).length;
-                          let completionPercentage =
-                            totalActivities > 0
-                              ? (completedActivities / totalActivities) * 100
-                              : 0;
-                          completionPercentage =
-                            completionPercentage % 1 === 0
-                              ? completionPercentage.toFixed(0)
-                              : completionPercentage.toFixed(2);
-
-                          const highestLastUpdate = task.activities.reduce(
-                            (highest, activity) => {
-                              if (!highest || activity.lastUpdate > highest) {
-                                console.log(activity.lastUpdate);
-                                return activity.lastUpdate;
-                              }
-                              return highest;
-                            },
-                            null
-                          );
-
-                          const formattedLastUpdate = highestLastUpdate
-                            ? moment(highestLastUpdate).format(
-                                "DD/MM/YYYY HH:mm"
-                              )
-                            : " - - -";
-
+                        {data.map((photo) => {
                           return (
                             <tr>
-                              <td>{task.formattedDate}</td>
-                              <td>{formattedLastUpdate}</td>
-                              <td>{task.name}</td>
-                              <td>{task.status}</td>
-                              <td
-                                style={{
-                                  color:
-                                    task.priority === "High"
-                                      ? "#ff0000"
-                                      : "#333",
-                                }}
-                              >
-                                {task.priority}
-                              </td>
-                              <td>
-                                <button
-                                  onClick={() => null}
-                                  className={`btn p-0 px-1 btn-success btn-sm`}
-                                >
-                                  {task.label}
-                                </button>
-                              </td>
-                              <td>{totalActivities}</td>
-                              <td>
-                                <div className="progressBarContainerSm">
-                                  <div
-                                    className="progressBarSm"
-                                    style={{
-                                      width: `${completionPercentage}%`,
-                                      backgroundColor:
-                                        completionPercentage <= 25
-                                          ? "red"
-                                          : completionPercentage <= 55
-                                          ? "orange"
-                                          : "#36c20b",
-                                    }}
-                                  >
-                                    {completionPercentage} %&nbsp;{"  "}
-                                  </div>
-                                </div>
-                              </td>
-                              <td>{task.formattedDeadline}</td>
+                              <td>{photo.name}</td>
+
                               <td
                                 style={{
                                   display: "flex",
@@ -253,7 +173,7 @@ const Gallery = () => {
                                 }}
                               >
                                 <Link
-                                  to={`/project/task/${task._id}`}
+                                  to={`/photo/${photo._id}`}
                                   style={{ flex: "1" }}
                                 >
                                   <OverlayTrigger
@@ -261,8 +181,7 @@ const Gallery = () => {
                                     overlay={
                                       <Tooltip className="tooltip">
                                         {" "}
-                                        Detail of task, activities, files,
-                                        comments
+                                        Photo
                                       </Tooltip>
                                     }
                                   >
@@ -271,7 +190,7 @@ const Gallery = () => {
                                         icon={faListCheck}
                                         className="taskIcon taskIcon3"
                                       />
-                                      Detail of Task
+                                      Detail
                                     </button>
                                   </OverlayTrigger>
                                 </Link>
@@ -282,44 +201,18 @@ const Gallery = () => {
                                     flexDirection: "row",
                                   }}
                                 >
-                                  {isAllowed(
-                                    userData.role,
-                                    userData._id,
-                                    task.members,
-                                    task.owner
-                                  ) ? (
-                                    <Link to={`/project/edit/task/${task._id}`}>
-                                      <OverlayTrigger
-                                        placement="top"
-                                        overlay={
-                                          <Tooltip className="tooltip">
-                                            Edit
-                                          </Tooltip>
-                                        }
-                                      >
-                                        <button
-                                          onClick={() => null}
-                                          className="btn btn-primary btn-sm ms-1 taskButton"
-                                        >
-                                          <FontAwesomeIcon
-                                            icon={faPenToSquare}
-                                            className="taskIcon"
-                                          />
-                                        </button>
-                                      </OverlayTrigger>
-                                    </Link>
-                                  ) : (
+                                  <Link to={`/edit/photo/${photo._id}`}>
                                     <OverlayTrigger
                                       placement="top"
                                       overlay={
                                         <Tooltip className="tooltip">
-                                          Edit not allowed
+                                          Edit
                                         </Tooltip>
                                       }
                                     >
                                       <button
                                         onClick={() => null}
-                                        className="btn btn-primary btn-sm ms-1 taskButton taskButtonDisabled"
+                                        className="btn btn-primary btn-sm ms-1 taskButton"
                                       >
                                         <FontAwesomeIcon
                                           icon={faPenToSquare}
@@ -327,75 +220,26 @@ const Gallery = () => {
                                         />
                                       </button>
                                     </OverlayTrigger>
-                                  )}
+                                  </Link>
 
                                   <OverlayTrigger
                                     placement="top"
                                     overlay={
                                       <Tooltip className="tooltip">
-                                        Send email to client
+                                        Delete photo
                                       </Tooltip>
                                     }
                                   >
                                     <button
-                                      onClick={() =>
-                                        client.email &&
-                                        openEmailModal(
-                                          client.email,
-                                          client.companyName,
-                                          null
-                                        )
-                                      }
-                                      className="btn btn-primary btn-sm ms-1 taskButton"
+                                      onClick={() => deletePhoto(photo._id)}
+                                      className="btn btn-danger btn-sm ms-1 taskButton"
                                     >
                                       <FontAwesomeIcon
-                                        icon={faEnvelope}
-                                        className="taskIcon"
+                                        icon={faTrash}
+                                        className="taskIcon taskIcon2"
                                       />
                                     </button>
                                   </OverlayTrigger>
-
-                                  {isAllowed(
-                                    userData.role,
-                                    userData._id,
-                                    task.members,
-                                    task.owner
-                                  ) ? (
-                                    <OverlayTrigger
-                                      placement="top"
-                                      overlay={
-                                        <Tooltip className="tooltip">
-                                          Delete task
-                                        </Tooltip>
-                                      }
-                                    >
-                                      <button
-                                        onClick={() => deleteTask(task._id)}
-                                        className="btn btn-danger btn-sm ms-1 taskButton"
-                                      >
-                                        <FontAwesomeIcon
-                                          icon={faTrash}
-                                          className="taskIcon taskIcon2"
-                                        />
-                                      </button>
-                                    </OverlayTrigger>
-                                  ) : (
-                                    <OverlayTrigger
-                                      placement="top"
-                                      overlay={
-                                        <Tooltip className="tooltip">
-                                          Delete task not allowed
-                                        </Tooltip>
-                                      }
-                                    >
-                                      <button className="btn btn-danger btn-sm ms-1 taskButton taskButtonDisabled">
-                                        <FontAwesomeIcon
-                                          icon={faTrash}
-                                          className="taskIcon taskIcon2"
-                                        />
-                                      </button>
-                                    </OverlayTrigger>
-                                  )}
                                 </div>
                               </td>
                             </tr>

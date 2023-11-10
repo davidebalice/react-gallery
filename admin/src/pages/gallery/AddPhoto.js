@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import { Context } from "../../context/UserContext";
 import axios from "axios";
 import Swal from "sweetalert2";
-import ButtonGroup from "../../components/Projects/ButtonGroup/ButtonGroup";
 import Breadcrumb from "../../components/breadcrumb/index";
 import Spacer from "../../components/spacer";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -89,7 +88,6 @@ const AddTask = () => {
     <>
       <div className="page">
         <Breadcrumb title={title} brad={brad} />
-        <ButtonGroup projectId={id} selectedTab="tasks" />
         <div className="card pageContainer">
           <div className="card-body formContainer">
             <Link to={`/project/tasks/${id}`}>

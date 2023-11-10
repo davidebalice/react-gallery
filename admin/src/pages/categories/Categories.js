@@ -19,7 +19,7 @@ import {
   faCamera,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Users = () => {
+const Categories = () => {
   const location = useLocation();
   const { userData, demo } = useContext(Context);
   const searchParams = new URLSearchParams(location.search);
@@ -57,7 +57,7 @@ const Users = () => {
         }
       )
       .then((response) => {
-        setData(response.data.users);
+        setData(response.data.categories);
         setCurrentPage(response.data.currentPage);
         setTotalPages(response.data.totalPages);
       })
@@ -66,7 +66,7 @@ const Users = () => {
       });
   }, [token, page, reload]);
 
-  function deleteUser(id) {
+  function deleteCategory(id) {
     Swal.fire({
       title: "Confirm delete?",
       text: "",
@@ -86,7 +86,7 @@ const Users = () => {
         } else {
           axios
             .post(
-              `${process.env.REACT_APP_API_BASE_URL}/api/user/delete/${id}`,
+              `${process.env.REACT_APP_API_BASE_URL}/api/category/delete/${id}`,
               { id: id },
               {
                 headers: {
@@ -97,8 +97,8 @@ const Users = () => {
               }
             )
             .then((response) => {
-              console.log("response.data.user");
-              console.log(response.data.user);
+              console.log("response.data.categories");
+              console.log(response.data.categories);
               if (response.data.status === "success") {
                 setReload((prevCount) => prevCount + 1);
               }
@@ -111,7 +111,7 @@ const Users = () => {
     });
   }
 
-  const title = "Users";
+  const title = "Categories";
   const brad = [
     {
       name: "home",
@@ -134,13 +134,13 @@ const Users = () => {
             <Breadcrumb title={title} brad={brad} />
 
             <div className="row">
-              <Link to={`/add/user/`}>
+              <Link to={`/add/category/`}>
                 <div className="addButton col-sm-4 col-md-4 col-lg-3">
                   <FontAwesomeIcon
                     icon={faCirclePlus}
                     className="addButtonIcon"
                   />
-                  <div className="card-body d-flex px-1">Add user</div>
+                  <div className="card-body d-flex px-1">Add category</div>
                 </div>
               </Link>
             </div>
@@ -152,50 +152,31 @@ const Users = () => {
                     <Table className="tableRow" hover bordered>
                       <thead>
                         <tr>
-                          <th>Photo</th>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Role</th>
+                          <th>Category</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
 
                       <tbody>
-                        {data.map((user) => (
+                        {data.map((category) => (
                           <tr>
+                           
                             <td>
-                              <img
-                                src={`${process.env.REACT_APP_API_BASE_URL}/api/user/img/${user.photo}`}
-                                class="userImg"
-                                alt=""
-                              />
+                              {category.name}
                             </td>
-                            <td>
-                              {user.surname} {user.name}
-                            </td>
-                            <td>{user.email}</td>
-                            <td>{user.role}</td>
-                            <td>
-                              <button
-                                onClick={() => null}
-                                className={`btn p-0 px-1 btn-success btn-sm`}
-                              >
-                                {user.label}
-                              </button>
-                            </td>
-                            <td>progress</td>
-                            <td>{user.formattedDeadline}</td>
+                          
+                           
                             <td>
                               <OverlayTrigger
                                 placement="top"
                                 overlay={
                                   <Tooltip className="tooltip">
                                     {" "}
-                                    Edit user
+                                    Edit category
                                   </Tooltip>
                                 }
                               >
-                                <Link to={`/edit/user/${user._id}`}>
+                                <Link to={`/edit/category/${category._id}`}>
                                   <button
                                     onClick={() => null}
                                     className="btn btn-primary btn-sm ms-1"
@@ -210,54 +191,12 @@ const Users = () => {
                                 overlay={
                                   <Tooltip className="tooltip">
                                     {" "}
-                                    Photo profile
-                                  </Tooltip>
-                                }
-                              >
-                                <Link to={`/photo/user/${user._id}`}>
-                                  <button
-                                    onClick={() => null}
-                                    className="btn btn-primary btn-sm ms-1"
-                                  >
-                                    <FontAwesomeIcon icon={faCamera} />
-                                  </button>
-                                </Link>
-                              </OverlayTrigger>
-
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={
-                                  <Tooltip className="tooltip">
-                                    {" "}
-                                    Send email to user
+                                    Delete category
                                   </Tooltip>
                                 }
                               >
                                 <button
-                                  onClick={() =>
-                                    openEmailModal(
-                                      user.email,
-                                      user.name,
-                                      user.surname
-                                    )
-                                  }
-                                  className="btn btn-primary btn-sm ms-1"
-                                >
-                                  <FontAwesomeIcon icon={faEnvelope} />
-                                </button>
-                              </OverlayTrigger>
-
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={
-                                  <Tooltip className="tooltip">
-                                    {" "}
-                                    Delete user
-                                  </Tooltip>
-                                }
-                              >
-                                <button
-                                  onClick={() => deleteUser(user._id)}
+                                  onClick={() => deleteCategory(category._id)}
                                   className=" btn btn-danger btn-sm ms-1"
                                 >
                                   <FontAwesomeIcon icon={faTrash} />
@@ -269,7 +208,7 @@ const Users = () => {
                       </tbody>
                     </Table>
                     <Pagination
-                      pageName="users"
+                      pageName="categories"
                       currentPage={currentPage}
                       totalPages={totalPages}
                       onPageChange={setCurrentPage}
@@ -288,4 +227,4 @@ const Users = () => {
     </>
   );
 };
-export default Users;
+export default Categories;
