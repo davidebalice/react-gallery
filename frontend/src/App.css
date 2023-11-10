@@ -1,0 +1,245 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.menu {
+  background: #b6c0c9;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.button {
+  border-radius: 0;
+  border: none;
+  background: none !important;
+  font-size: 20px !important;
+  padding: 10px 20px !important;
+}
+
+.button:hover {
+  background: #999 !important;
+}
+
+.galleryImg {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+}
+
+.galleryImg:hover {
+  transform: scale(1.1);
+  filter: blur(1px);
+}
+
+.galleryInfo {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #fff;
+  pointer-events: none;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.imageContainer {
+  position: relative;
+  padding-bottom: 100%;
+  overflow: hidden;
+}
+
+.imageContainer img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.row > * {
+  padding: 2px !important;
+}
+
+.masonryGrid {
+  display: flex;
+  margin-left: -16px;
+  width: auto;
+}
+
+.masonryColumn {
+  padding-left: 16px;
+}
+
+.masonryGridItem {
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.masonryImg {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: filter 0.5s ease;
+  cursor: pointer;
+}
+
+.masonryImg:hover {
+  filter: brightness(60%) blur(1px);
+}
+
+.modal-dialog {
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+}
+
+.modal-content {
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  position: relative;
+  background: none;
+  border: 0;
+}
+
+.modal-content img {
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 70%;
+  min-height: 70%;
+  overflow: hidden;
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  object-fit: contain;
+  align-items: center;
+}
+
+.closeButton {
+  color: #fff;
+  position: fixed;
+  right: 20px;
+  cursor: pointer;
+  top: 20px;
+}
+
+.closeButton:hover {
+  color: #ddd;
+}
+
+.slideButtons {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 650px;
+  z-index: 200;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+}
+
+.slideButton {
+  font-size: 40px;
+  cursor: pointer;
+  opacity: 70%;
+}
+
+.slideButton:hover {
+  color: #444;
+}
+
+.slideshowPage {
+  width: 100%;
+  height: calc(100vh - 100px);
+  background-image: url("./assets/img/bg.jpg");
+  background-size: cover;
+}
+
+.slideshow {
+  margin: 0 auto;
+  overflow: hidden;
+  max-width: 70%;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .slideshow {
+    max-width: 90%;
+  }
+}
+
+.slideshowSlider {
+  white-space: nowrap;
+  transition: ease 1000ms;
+}
+
+.slideThumb {
+  width: 100%;
+  height: auto;
+}
+
+.slide {
+  display: inline-block;
+  height: 680px;
+  width: 100%;
+  border-radius: 40px;
+}
+
+.slideImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slideThumbs {
+  justify-content: center;
+  display: flex;
+}
+
+.slideThumbWrapper {
+  display: inline-block;
+  width: 130px;
+  height: 86px;
+  cursor: pointer;
+  overflow: hidden;
+  margin: 20px 8px 0px;
+  border: 2px solid #ccc;
+  transition: filter 0.3s ease-in-out;
+}
+
+.slideThumbWrapper:hover {
+  filter: brightness(60%) blur(1px);
+  border: 2px solid #888;
+}
+
+.slideThumbWrapper.active {
+  filter: brightness(60%) blur(1px);
+  border: 2px solid #888;
+}

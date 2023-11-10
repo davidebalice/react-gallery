@@ -1,0 +1,38 @@
+.logo {
+  max-width: 180px !important;
+  height: auto;
+}
+
+.logoReact {
+  max-width: 70px !important;
+  height: auto;
+}
+
+.logoReactTools {
+  max-width: 80px !important;
+  height: auto;
+  margin-left: 10px;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  padding: 21px 0 21px 0;
+}
+
+.header {
+  width: 100%;
+  -webkit-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.23);
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.23);
+  z-index: 1;
+}
+
+.headerContainer{
+  display: flex;
+  justify-content: space-between;
+}
+
+.github{
+  height:38px;
+  margin-right:20px
+}
