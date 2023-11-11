@@ -1,9 +1,11 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { Context } from "../../context/UserContext";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Breadcrumb from "../../components/breadcrumb/index";
 import Spacer from "../../components/spacer";
+import Divider from "../../components/divider/";
+import Loading from "../../components/loading";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,11 +13,11 @@ import {
   faCirclePlus,
 } from "@fortawesome/free-solid-svg-icons";
 
-const AddTask = () => {
+const AddPhoto = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
   const { userData, demo } = useContext(Context);
-  const title = "Add task";
+  const title = "Add photo";
   const brad = [
     {
       name: "home",
@@ -25,26 +27,68 @@ const AddTask = () => {
     },
   ];
   const { id } = useParams();
-  const [responseData, setResponseData] = useState(null);
-  const [data, setData] = useState([]);
+  const inputFileRef = useRef(null);
+  const [files, setFiles] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [photoData, setPhotoData] = useState({ show: false, imgUrl: "" });
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
-    status: "",
-    priority: "",
-    label: "",
-    description: "",
-    deadline: "",
-    owner: "",
-    project_id: id,
+    category_id: null,
+    photo: [],
+    categories: [],
+    message: "",
   });
 
-  const handleInput = (event) => {
-    const { name, value } = event.target;
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_BASE_URL}/api/add/gallery/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("response.data.categories");
+        console.log(response.data.categories);
+        setFormData({ ...formData, categories: response.data.categories });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        Swal.fire("Error", error, "error");
+      });
+  }, []);
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFile = (e) => {
+    const photo = e.target.files;
+    setFormData({ ...formData, photo: photo });
+
+    const fileList = e.target.files;
+    const filesArray = Array.from(fileList);
+
+    const filesWithPreview = filesArray.map((file) => {
+      return {
+        file,
+        preview: URL.createObjectURL(file),
+      };
+    });
+
+    setFiles((prevFiles) => [...prevFiles, ...filesWithPreview]);
+  };
+
+  useEffect(() => {
+    /*
     setFormData({
       ...formData,
-      [name]: value,
-    });
-  };
+    });*/
+    setLoading(false);
+  }, []);
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -57,26 +101,31 @@ const AddTask = () => {
       });
     } else {
       axios
-        .post(process.env.REACT_APP_API_BASE_URL + "/api/add/task", formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        })
+        .post(
+          process.env.REACT_APP_API_BASE_URL + "/api/add/gallery/",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((response) => {
-          console.log("response.data");
-          console.log(response.data);
-          setResponseData(response.data.message);
-          const owner = data.owner;
+          console.log("response.data.message");
+          console.log(response.data.message);
+
           setFormData({
             ...formData,
-            owner: owner,
+            photo: "",
+            message: response.data.message,
           });
 
-          if (response.data.create === "success") {
-            navigate(`/project/tasks/${id}`);
+          if (inputFileRef.current) {
+            inputFileRef.current.value = "";
           }
+
+          //handleUpdateFiles(response.data.photo);
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -90,7 +139,13 @@ const AddTask = () => {
         <Breadcrumb title={title} brad={brad} />
         <div className="card pageContainer">
           <div className="card-body formContainer">
-            <Link to={`/project/tasks/${id}`}>
+            <Link
+              to={
+                formData.category_id
+                  ? `/gallery/${formData.category_id}`
+                  : "/gallery"
+              }
+            >
               <div class="backButton col-sm-4 col-md-4 col-lg-3">
                 <FontAwesomeIcon
                   icon={faCircleChevronLeft}
@@ -100,109 +155,67 @@ const AddTask = () => {
               </div>
             </Link>
             <div className="row justify-content-center">
-              <div className="col-md-6 mt-3">
+              <form enctype="multipart/form-data" method="post" id="formUpload">
                 <label for="name">
-                  <b>Name of task</b>
+                  <b>Add photo to Gallery</b>
                 </label>
-                <input
+                <select
                   type="text"
                   className="form-control"
-                  name="name"
-                  required
-                  value={formData.name}
-                  onChange={handleInput}
-                />
-              </div>
-              <div className="col-md-6 mt-3">
-                <label for="status">
-                  <b>Status</b>
-                </label>
-                <select
-                  className="form-control"
-                  name="status"
-                  value={formData.status}
+                  name="category_id"
                   required
                   onChange={handleInput}
                 >
-                  <option value=""> - Select status - </option>
-                  <option value="Open">Open</option>
-                  <option value="Close">Close</option>
+                  <option> - Select category - </option>
+                  {formData.categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
                 </select>
-              </div>
-              <div className="col-md-6 mt-3">
-                <label for="priority">
-                  <b>Priority</b>
-                </label>
-                <select
-                  className="form-control"
-                  name="priority"
-                  value={formData.priority}
-                  required
-                  onChange={handleInput}
-                >
-                  <option value=""> - Select priority - </option>
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                  <option value="Urgent">Urgent</option>
-                </select>
-              </div>
-              <div className="col-md-6 mt-3">
-                <label for="label">
-                  <b>Label</b>
-                </label>
-                <select
-                  className="form-control"
-                  name="label"
-                  value={formData.label}
-                  required
-                  onChange={handleInput}
-                >
-                  <option value=""> - Select label - </option>
-                  <option value="Task">Task</option>
-                  <option value="Bug">Bug</option>
-                  <option value="Quote">Quote</option>
-                </select>
-              </div>
-
-              <div className="col-md-6 mt-3">
-                <label for="deadline">
-                  <b>Deadline date</b>
-                </label>
+                <Spacer height={20} />
                 <input
-                  type="date"
+                  type="file"
                   className="form-control"
-                  name="deadline"
+                  ref={inputFileRef}
+                  name="file"
                   required
-                  value={formData.deadline}
-                  onChange={handleInput}
+                  onChange={handleFile}
+                  multiple
                 />
-              </div>
+                <Loading/>
+                <button
+                  onClick={submitForm}
+                  className="btn addButtonSm btn-sm mt-3"
+                >
+                  <FontAwesomeIcon
+                    icon={faCirclePlus}
+                    className="addButtonIconSm"
+                  />
+                  Upload photo
+                </button>
 
-              <div className="col-md-6 mt-3"></div>
-
-              <Spacer height={30} />
-
-              <div className="col-md-12">
-                <label for="brand">
-                  <b>Description</b>
-                </label>
-                <textarea
-                  className="form-control"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInput}
-                ></textarea>
+                {formData.message && formData.message}
+                <Divider
+                  className="divider"
+                  marginTop={60}
+                  marginBottom={60}
+                  borderSize={1}
+                  borderType={"solid"}
+                  borderColor={"#ddd"}
+                >
+                  {" "}
+                </Divider>
+              </form>
+              <div>
+                {files.map((fileObj, index) => (
+                  <div key={index}>
+                    <img src={fileObj.preview} alt={`Preview ${index}`} />
+                    <p>{fileObj.file.name}</p>
+                  </div>
+                ))}
               </div>
             </div>
-
-            <button
-              onClick={submitForm}
-              className="btn btn-primary btn-sm addButtonSm mt-5"
-            >
-              <FontAwesomeIcon icon={faCirclePlus} className="addButtonIcon" />
-              Add task
-            </button>
           </div>
         </div>
       </div>
@@ -210,4 +223,4 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default AddPhoto;

@@ -140,7 +140,9 @@ const Gallery = () => {
               <div className="col-12">
                 <div className="card pageContainer">
                   <div className="card-body">
-                    <Link to={`/add/gallery/${id}`}>
+                    <Link
+                      to={id ? `/add/gallery/${id}` : "/add/gallery"}
+                    >
                       <div className="addButton col-sm-4 col-md-4 col-lg-3">
                         <FontAwesomeIcon
                           icon={faCirclePlus}
@@ -164,7 +166,27 @@ const Gallery = () => {
                         {data.map((photo) => {
                           return (
                             <tr>
-                              <td>{photo.name}</td>
+                              <td>
+                                {" "}
+                                <img
+                                  src={`${
+                                    process.env.REACT_APP_API_BASE_URL
+                                  }/api/gallery/photo/${photo && photo.photo}`}
+                                  alt=""
+                                  className="photo"
+                                />
+                              </td>
+                              {/*
+                                onClick={() =>
+                                    openPhotoModal(
+                                      `${
+                                        process.env.REACT_APP_API_BASE_URL
+                                      }/api/screenshot/img/${
+                                        screenshot && screenshot.file
+                                      }`,
+                                      screenshot.name
+                                    )
+                                  } */}
 
                               <td
                                 style={{
