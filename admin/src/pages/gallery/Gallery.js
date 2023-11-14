@@ -1,15 +1,15 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { Context } from "../../context/UserContext";
-import isAllowed from "../../middlewares/allow";
 import Breadcrumb from "../../components/breadcrumb/index";
-import Table from "react-bootstrap/Table";
 import Swal from "sweetalert2";
 import Loading from "../../components/loading";
-import EmailModal from "../../components/Modal/EmailModal";
+import EditModal from "../../components/Modal/EditModal";
+import PhotoModal from "../../components/Modal/PhotoModal";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import Spacer from "../../components/spacer";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -28,8 +28,12 @@ const Gallery = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [reload, setReload] = useState(1);
+  const [editData, setEditData] = useState({ show: false, name: "", id: "" });
+  const [photoData, setPhotoData] = useState({ show: false, imgUrl: "" });
   const token = localStorage.getItem("authToken");
   const { userData, demo } = useContext(Context);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [modalData, setModalData] = useState({
     show: false,
     name: "",
@@ -37,13 +41,17 @@ const Gallery = () => {
     email: "",
   });
 
-  const closeEmailModal = () => {
-    setModalData(false, null, null);
-  };
-
   useEffect(() => {
     if (id) {
-      setUrlapi(`${process.env.REACT_APP_API_BASE_URL}/api/gallery/${id}`);
+      setSelectedCategory(id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      setUrlapi(
+        `${process.env.REACT_APP_API_BASE_URL}/api/gallery/${selectedCategory}`
+      );
     } else {
       setUrlapi(`${process.env.REACT_APP_API_BASE_URL}/api/gallery/`);
     }
@@ -60,11 +68,34 @@ const Gallery = () => {
         console.log(response.data.gallery);
         setLoading(false);
         setData(response.data.gallery);
+        setCategories(response.data.categories);
+        setSelectedCategory(response.data.category._id);
       })
       .catch((error) => {
         console.error("Error during api call:", error);
       });
-  }, [token, reload]);
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/gallery/${selectedCategory}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        setLoading(false);
+        setData(response.data.gallery);
+      })
+      .catch((error) => {
+        console.error("Error during api call:", error);
+      });
+  }, [token, reload, selectedCategory]);
 
   const title = "Gallery";
   const brad = [
@@ -121,13 +152,33 @@ const Gallery = () => {
     });
   }
 
+  const openEditModal = (text, id) => {
+    setEditData({ show: true, text, id });
+  };
+
+  const closeEditModal = () => {
+    setEditData(false, null, null);
+  };
+
+  const openPhotoModal = (imgUrl, title) => {
+    setPhotoData({ show: true, imgUrl, title });
+  };
+
+  const closePhotoModal = () => {
+    setPhotoData(false, "", "");
+  };
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setSelectedCategory(value);
+  };
+  /*
+  function handleUpdate(newPhoto) {
+    onUpdate(newPhoto);
+  }
+*/
   return (
     <>
-      <EmailModal
-        show={modalData.show}
-        closeEmailModal={closeEmailModal}
-        modalData={modalData}
-      />
       <div className="page">
         <Breadcrumb title={title} brad={brad} />
         {loading ? (
@@ -140,9 +191,7 @@ const Gallery = () => {
               <div className="col-12">
                 <div className="card pageContainer">
                   <div className="card-body">
-                    <Link
-                      to={id ? `/add/gallery/${id}` : "/add/gallery"}
-                    >
+                    <Link to={id ? `/add/gallery/${id}` : "/add/gallery"}>
                       <div className="addButton col-sm-4 col-md-4 col-lg-3">
                         <FontAwesomeIcon
                           icon={faCirclePlus}
@@ -151,128 +200,121 @@ const Gallery = () => {
                         <div className="card-body d-flex px-1">Add photo</div>
                       </div>
                     </Link>
-                    <Table className="tableRow" bordered hover>
-                      <thead>
-                        <tr>
-                          <th>Photo</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
 
-                      <tbody>
-                        {data.length === 0 && (
-                          <p className="my-5">Gallery not found</p>
-                        )}
-                        {data.map((photo) => {
-                          return (
-                            <tr>
-                              <td>
-                                {" "}
-                                <img
-                                  src={`${
+                    <select
+                      type="text"
+                      className="form-control selectCategories"
+                      name="category_id"
+                      required
+                      onChange={handleInput}
+                      value={selectedCategory}
+                    >
+                      <option> - Select category - </option>
+                      {categories &&
+                        categories.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))}
+                    </select>
+
+                    <Spacer height={20} />
+
+                    {data.length === 0 && (
+                      <p className="my-5">Gallery not found</p>
+                    )}
+
+                    <div className="photoCardContainer">
+                      {data.map((photo) => {
+                        return (
+                          <div className="photoCard" key={photo._id}>
+                            <img
+                              src={`${
+                                process.env.REACT_APP_API_BASE_URL
+                              }/api/gallery/photo/${photo && photo.photo}`}
+                              alt=""
+                              className="photoImg"
+                              onClick={() =>
+                                openPhotoModal(
+                                  `${
                                     process.env.REACT_APP_API_BASE_URL
-                                  }/api/gallery/photo/${photo && photo.photo}`}
-                                  alt=""
-                                  className="photo"
-                                />
-                              </td>
-                              {/*
-                                onClick={() =>
-                                    openPhotoModal(
-                                      `${
-                                        process.env.REACT_APP_API_BASE_URL
-                                      }/api/screenshot/img/${
-                                        screenshot && screenshot.file
-                                      }`,
-                                      screenshot.name
-                                    )
-                                  } */}
+                                  }/api/gallery/photo/${photo && photo.photo}`,
+                                  photo.name
+                                )
+                              }
+                            />
 
-                              <td
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                }}
-                              >
-                                <Link
-                                  to={`/photo/${photo._id}`}
-                                  style={{ flex: "1" }}
+                            {photo.name && (
+                              <div className="photoCardTitle">
+                                <p>{photo.name}</p>{" "}
+                              </div>
+                            )}
+
+                            <div className="photoCardButtons">
+                              <div className="activityButton">
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={
+                                    <Tooltip className="tooltip">
+                                      {" "}
+                                      Edit description of photo
+                                    </Tooltip>
+                                  }
                                 >
-                                  <OverlayTrigger
-                                    placement="top"
-                                    overlay={
-                                      <Tooltip className="tooltip">
-                                        {" "}
-                                        Photo
-                                      </Tooltip>
+                                  <div
+                                    onClick={() =>
+                                      openEditModal(photo.name, photo._id)
                                     }
                                   >
-                                    <button className=" btn btn-primary btn-sm ms-1 btnTask">
-                                      <FontAwesomeIcon
-                                        icon={faListCheck}
-                                        className="taskIcon taskIcon3"
-                                      />
-                                      Detail
-                                    </button>
-                                  </OverlayTrigger>
-                                </Link>
-
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                  }}
+                                    <FontAwesomeIcon
+                                      icon={faPenToSquare}
+                                      className="activityButtonEdit"
+                                    />
+                                  </div>
+                                </OverlayTrigger>
+                              </div>
+                              
+                              <div className="activityButton">
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={
+                                    <Tooltip className="tooltip">
+                                      {" "}
+                                      Delete photo
+                                    </Tooltip>
+                                  }
                                 >
-                                  <Link to={`/edit/photo/${photo._id}`}>
-                                    <OverlayTrigger
-                                      placement="top"
-                                      overlay={
-                                        <Tooltip className="tooltip">
-                                          Edit
-                                        </Tooltip>
-                                      }
-                                    >
-                                      <button
-                                        onClick={() => null}
-                                        className="btn btn-primary btn-sm ms-1 taskButton"
-                                      >
-                                        <FontAwesomeIcon
-                                          icon={faPenToSquare}
-                                          className="taskIcon"
-                                        />
-                                      </button>
-                                    </OverlayTrigger>
-                                  </Link>
-
-                                  <OverlayTrigger
-                                    placement="top"
-                                    overlay={
-                                      <Tooltip className="tooltip">
-                                        Delete photo
-                                      </Tooltip>
-                                    }
-                                  >
-                                    <button
-                                      onClick={() => deletePhoto(photo._id)}
-                                      className="btn btn-danger btn-sm ms-1 taskButton"
-                                    >
-                                      <FontAwesomeIcon
-                                        icon={faTrash}
-                                        className="taskIcon taskIcon2"
-                                      />
-                                    </button>
-                                  </OverlayTrigger>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </Table>
+                                  <div onClick={() => deletePhoto(photo._id)}>
+                                    <FontAwesomeIcon
+                                      icon={faTrash}
+                                      className="activityButtonDelete"
+                                    />
+                                  </div>
+                                </OverlayTrigger>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <EditModal
+              show={editData.show}
+              closeEditModal={closeEditModal}
+              editData={editData}
+              updateUrl="/api/update/photo"
+              setReload={setReload}
+            />
+            {/*   onUpdate={handleUpdate} */}
+            <PhotoModal
+              show={photoData.show}
+              closePhotoModal={closePhotoModal}
+              title={photoData.title}
+              imgUrl={photoData.imgUrl}
+            />
           </>
         )}
       </div>

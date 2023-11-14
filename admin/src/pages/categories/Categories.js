@@ -164,7 +164,6 @@ const Categories = () => {
                             <td>
                               {category.name}
                             </td>
-                          
                            
                             <td>
                               <OverlayTrigger

@@ -12,8 +12,7 @@ import {
   faChevronLeft,
   faChevronDown,
   faListUl,
-  faBuildingColumns,
-  faIndent,
+  faBars,
   faFileInvoice,
   faTableList,
   faUsersGear,
@@ -24,7 +23,8 @@ import {
   faWrench,
   faLifeRing,
   faGaugeHigh,
-  faEye,
+  faImages,
+  faImage,
   faPenToSquare,
   faEnvelope,
   faBell,
@@ -39,7 +39,6 @@ import {
   faPeopleGroup,
   faVideo,
   faUser,
-  faBars,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -210,9 +209,9 @@ export default function Layouts() {
                       alt="db logo"
                     />
                   </a>
-                  <a href="#" className="nav_logo">
-                    <i className="bx bx-layer nav_logo-icon"></i>{" "}
-                    <span className="nav_logo-name">Task manager</span>{" "}
+                  <a href="#" className="nav_logo titleApp">
+                  <FontAwesomeIcon icon={faImages} />{" "}
+                    <span className="nav_logo-name titleApp">Gallery React Node</span>{" "}
                   </a>
                   <div className="nav_list">
                     <Link
@@ -233,7 +232,7 @@ export default function Layouts() {
                             pathname === "/categories" && "active"
                           }`}
                         >
-                          <FontAwesomeIcon icon={faUser} />
+                           <FontAwesomeIcon icon={faBars} />
                           <span className="nav_name">Categories</span>
                         </Link>
                       </>
@@ -246,7 +245,7 @@ export default function Layouts() {
                         pathname === "/gallery" && "active"
                       }`}
                     >
-                      <FontAwesomeIcon icon={faTableList} />
+                       <FontAwesomeIcon icon={faImage} />
                       <span className="nav_name">Gallery</span>
                     </Link>
 
@@ -260,6 +259,18 @@ export default function Layouts() {
                       <FontAwesomeIcon icon={faGear} />
                       <span className="nav_name">Profile</span>
                     </Link>
+
+                    <Link
+                      onClick={updateActive}
+                      to="/users"
+                      className={`nav_link ${
+                        pathname === "/users" && "active"
+                      }`}
+                    >
+                      <FontAwesomeIcon icon={faUser} />
+                      <span className="nav_name">Users</span>
+                    </Link>
+
                     <Link onClick={logoutHandle} to="#" className={`nav_link `}>
                       <FontAwesomeIcon icon={faFileInvoice} />
                       <span className="nav_name">Logout</span>

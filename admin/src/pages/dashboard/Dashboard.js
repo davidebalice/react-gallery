@@ -3,9 +3,9 @@ import { Context } from "../../context/UserContext";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faDatabase,
+  faBars,
   faListCheck,
-  faEyeLowVision,
+  faImages,
   faBuildingColumns,
   faTableList,
   faUser,
@@ -74,7 +74,7 @@ export default function Hero() {
               <div className="dashboardSection">
                 <div className="card-body">
                   <div className="row">
-                    <div className="dashboardCol col-md-3 col-12">
+                    <div className="dashboardCol dashboardBg col-md-3 col-12">
                       <div className="dashboardDescription">
                         <b className="dashboardText1">Gallery</b>
                         <p className="dashboardText2">
@@ -160,8 +160,26 @@ export default function Hero() {
           </div>
         </div>
 
-     
-          <div className="col-lg-3 col-sm-6 col-12 d-flex">
+        <div className="row">
+          <div className="col-lg-4 col-sm-6 col-12 d-flex">
+            <div className="dashboardBox">
+              <div className="dash-counts">
+                <h4>
+                  <CountUp end={data && data.categories} />
+                </h4>
+                <h5 className="dashboardTitle">Categories</h5>
+              </div>
+              <div className="dash-imgs">
+                <FontAwesomeIcon
+                  icon={faBars}
+                  size="lg"
+                  className="dashboardIcon"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-4 col-sm-6 col-12 d-flex">
             <div className="dashboardBox">
               <div className="dash-counts">
                 <h4>
@@ -171,14 +189,15 @@ export default function Hero() {
               </div>
               <div className="dash-imgs">
                 <FontAwesomeIcon
-                  icon={faListCheck}
+                  icon={faImages}
                   size="lg"
                   className="dashboardIcon"
                 />
               </div>
             </div>
           </div>
-          <div className="col-lg-3 col-sm-6 col-12 d-flex">
+
+          <div className="col-lg-4 col-sm-6 col-12 d-flex">
             <div className="dashboardBox">
               <div className="dash-counts">
                 <h4>
@@ -194,7 +213,8 @@ export default function Hero() {
                 />
               </div>
             </div>
-          </div>
+          </div>   
+        </div>
       </div>
     </>
   );

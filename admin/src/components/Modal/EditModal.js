@@ -10,16 +10,11 @@ const EditModal = ({
   editData,
   closeEditModal,
   updateUrl,
-  onUpdateActivities,
-  type,
+  setReload
 }) => {
   const token = localStorage.getItem("authToken");
   const [text, setText] = useState("");
   const { userData, demo } = useContext(Context);
-
-  const handleUpdateActivities = (newActivities) => {
-    onUpdateActivities(newActivities);
-  };
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -44,17 +39,9 @@ const EditModal = ({
           }
         )
         .then((response) => {
-          if (type === "activities") {
-            console.log(response.data.activities);
-            handleUpdateActivities(response.data.activities);
-          } else if (type === "comments") {
-            console.log(response.data.comments);
-            handleUpdateActivities(response.data.comments);
-          } else if (type === "files") {
-            console.log(response.data.files);
-            handleUpdateActivities(response.data.files);
-          }
-
+          console.log(response.data.gallery);
+          //handleUpdate(response.data.gallery);
+          setReload((prevCount) => prevCount + 1);
           closeEditModal();
         })
         .catch((error) => {
@@ -83,7 +70,7 @@ const EditModal = ({
             <textarea
               name="text"
               className="form-control"
-              style={{ height: "200px" }}
+              style={{ height: "100px" }}
               onChange={handleTextChange}
             >
               {editData.text}

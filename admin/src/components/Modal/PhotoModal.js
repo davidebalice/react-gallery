@@ -8,7 +8,7 @@ const PhotoModal = ({ show, imgUrl, title, closePhotoModal }) => {
     <>
       <Modal show={show} className="photoModal" size="lg" centered>
         <Modal.Header className="photoModalHeader">
-          <Modal.Title style={{fontSize:'14px'}}>{title}</Modal.Title>
+          <Modal.Title style={{ fontSize: "14px" }}>{title}</Modal.Title>
           <Button variant="secondary" onClick={closePhotoModal}>
             Close
           </Button>
