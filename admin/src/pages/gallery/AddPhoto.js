@@ -17,7 +17,7 @@ const AddPhoto = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
   const { userData, demo } = useContext(Context);
-  const title = "Add photo";
+  const title = "Add photo to gallery";
   const brad = [
     {
       name: "home",
@@ -29,7 +29,6 @@ const AddPhoto = () => {
   const { id } = useParams();
   const inputFileRef = useRef(null);
   const [files, setFiles] = useState([]);
-  const [progress, setProgress] = useState(0);
   const [photoData, setPhotoData] = useState({ show: false, imgUrl: "" });
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -92,6 +91,7 @@ const AddPhoto = () => {
 
   const submitForm = (e) => {
     e.preventDefault();
+    setLoading(true);
     if (demo) {
       Swal.fire({
         title: "Demo mode",
@@ -99,6 +99,7 @@ const AddPhoto = () => {
         icon: "error",
         cancelButtonText: "Close",
       });
+      setLoading(false);
     } else {
       axios
         .post(
@@ -114,7 +115,7 @@ const AddPhoto = () => {
         .then((response) => {
           console.log("response.data.message");
           console.log(response.data.message);
-
+          setLoading(false);
           setFormData({
             ...formData,
             photo: "",
@@ -154,11 +155,16 @@ const AddPhoto = () => {
                 Back
               </div>
             </Link>
+            <Spacer height={30} />
             <div className="row justify-content-center">
+              {formData.message && (
+                <p className="successMessage">{formData.message}</p>
+              )}
               <form enctype="multipart/form-data" method="post" id="formUpload">
                 <label for="name">
-                  <b>Add photo to Gallery</b>
+                  <b>Category</b>
                 </label>
+                <Spacer height={10} />
                 <select
                   type="text"
                   className="form-control"
@@ -173,7 +179,9 @@ const AddPhoto = () => {
                     </option>
                   ))}
                 </select>
-                <Spacer height={20} />
+                <Spacer height={40} />
+                <b>Select single file o multiple files</b>
+                <Spacer height={10} />
                 <input
                   type="file"
                   className="form-control"
@@ -183,19 +191,22 @@ const AddPhoto = () => {
                   onChange={handleFile}
                   multiple
                 />
-                <Loading/>
-                <button
-                  onClick={submitForm}
-                  className="btn addButtonSm btn-sm mt-3"
-                >
-                  <FontAwesomeIcon
-                    icon={faCirclePlus}
-                    className="addButtonIconSm"
-                  />
-                  Upload photo
-                </button>
+                <Spacer height={30} />
+                {loading ? (
+                  <Loading />
+                ) : (
+                  <button
+                    onClick={submitForm}
+                    className="btn addButtonSm btn-sm mt-3"
+                  >
+                    <FontAwesomeIcon
+                      icon={faCirclePlus}
+                      className="addButtonIconSm"
+                    />
+                    Upload photo
+                  </button>
+                )}
 
-                {formData.message && formData.message}
                 <Divider
                   className="divider"
                   marginTop={60}
@@ -207,10 +218,14 @@ const AddPhoto = () => {
                   {" "}
                 </Divider>
               </form>
-              <div>
+              <div className="previewImgContainer">
                 {files.map((fileObj, index) => (
-                  <div key={index}>
-                    <img src={fileObj.preview} alt={`Preview ${index}`} />
+                  <div key={index} className="col-3">
+                    <img
+                      src={fileObj.preview}
+                      alt={`Preview ${index}`}
+                      className="previewImg"
+                    />
                     <p>{fileObj.file.name}</p>
                   </div>
                 ))}

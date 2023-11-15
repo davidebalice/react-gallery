@@ -10330,7 +10330,7 @@ label {
 }
 
 .photoCardTitle {
-  background-color: #f1f1f1;
+  background-color: rgba(0, 0, 0, 0.70);
   width: 100%;
   overflow: hidden;
   font-size: 16px;
@@ -10338,6 +10338,8 @@ label {
   position: absolute;
   left: 0;
   bottom: 0;
+  color:#fff;
+  font-weight: bold;
 }
 
 .photoImg {
@@ -10570,6 +10572,29 @@ label {
 
 .titleApp {
   color: #fa8a07 !important;
+}
+
+.successMessage{
+  font-weight: bold;
+  color: #0f9d58;
+  font-size: 17px;
+  background:#f1f1f1;
+  width: fit-content;
+  padding:12px;
+  float:left;
+  text-align: left;
+  left:0
+}
+
+.previewImg{
+  width:180px;
+  margin-right:8px;
+  margin-bottom:8px;
+}
+
+.previewImgContainer{
+  display: flex;
+  flex-wrap: wrap;
 }
 
 /*# sourceMappingURL=style.css.map */
