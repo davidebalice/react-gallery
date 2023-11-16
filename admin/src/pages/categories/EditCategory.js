@@ -114,10 +114,6 @@ const EditCategory = () => {
       {userData && userData.role === "admin" ? (
         <>
           <div className="page">
-            {id}
-            {id}
-            {id}
-            {id}
             <div class="row">
               <Link to={`/categories`}>
                 <div class="backButton bg-primary col-sm-4 col-md-4 col-lg-3">

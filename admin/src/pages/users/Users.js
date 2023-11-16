@@ -10,6 +10,7 @@ import Pagination from "../../components/pagination/Pagination";
 import NotPermission from "../Auth/notPermission";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import Spacer from "../../components/spacer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
@@ -249,22 +250,23 @@ const Users = () => {
                                 overlay={
                                   <Tooltip className="tooltip">
                                     {" "}
-                                   Delete user
+                                    Delete user
                                   </Tooltip>
                                 }
-                              >    
-                              <button
-                                onClick={() => deleteUser(user._id)}
-                                className=" btn btn-danger btn-sm ms-1"
                               >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </button>
+                                <button
+                                  onClick={() => deleteUser(user._id)}
+                                  className=" btn btn-danger btn-sm ms-1"
+                                >
+                                  <FontAwesomeIcon icon={faTrash} />
+                                </button>
                               </OverlayTrigger>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </Table>
+                    <Spacer height={20} />
                     <Pagination
                       pageName="users"
                       currentPage={currentPage}

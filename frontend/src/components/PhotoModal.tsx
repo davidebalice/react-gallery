@@ -13,7 +13,7 @@ const PhotoModal: React.FC<PhotoProps> = ({ selectedImage, closeImage }) => {
       <div className="closeButton" onClick={closeImage}>
         <FaWindowClose size="40" />
       </div>
-      <img src={selectedImage} alt={`${selectedImage}`} />
+      <img src={selectedImage} alt={`${selectedImage}`} className="modalPhoto"/>
     </Modal>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Context } from "../../context/UserContext";
 import Breadcrumb from "../../components/breadcrumb/index";
@@ -300,12 +300,16 @@ const Gallery = () => {
                 </div>
               </div>
             </div>
-            <Pagination
-              pageName="gallery"
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+            
+            {data && (
+              <Pagination
+                pageName="gallery"
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
+
             <EditModal
               show={editData.show}
               closeEditModal={closeEditModal}

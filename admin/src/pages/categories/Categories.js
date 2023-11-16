@@ -10,6 +10,7 @@ import Pagination from "../../components/pagination/Pagination";
 import NotPermission from "../Auth/notPermission";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import Spacer from "../../components/spacer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
@@ -29,20 +30,6 @@ const Categories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [data, setData] = useState([]);
-  const [modalData, setModalData] = useState({
-    show: false,
-    name: "",
-    surname: "",
-    email: "",
-  });
-
-  const openEmailModal = (email, name, surname) => {
-    setModalData({ show: true, email, name, surname });
-  };
-
-  const closeEmailModal = () => {
-    setModalData(false, null, null);
-  };
 
   useEffect(() => {
     axios
@@ -125,11 +112,6 @@ const Categories = () => {
     <>
       {userData && userData.role === "admin" ? (
         <>
-          <EmailModal
-            show={modalData.show}
-            closeEmailModal={closeEmailModal}
-            modalData={modalData}
-          />
           <div className="page">
             <Breadcrumb title={title} brad={brad} />
 
@@ -160,11 +142,8 @@ const Categories = () => {
                       <tbody>
                         {data.map((category) => (
                           <tr>
-                           
-                            <td>
-                              {category.name}
-                            </td>
-                           
+                            <td>{category.name}</td>
+
                             <td>
                               <OverlayTrigger
                                 placement="top"
@@ -206,6 +185,7 @@ const Categories = () => {
                         ))}
                       </tbody>
                     </Table>
+                    <Spacer height={20} />
                     <Pagination
                       pageName="categories"
                       currentPage={currentPage}

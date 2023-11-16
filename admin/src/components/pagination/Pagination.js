@@ -9,22 +9,26 @@ function Pagination({ pageName, currentPage, totalPages, onPageChange }) {
   }
 
   return (
-    <div>
+    <>
       <ul className="pagination">
         {pageNumbers.map((pageNumber) => (
-          <li
-            key={pageNumber}
-            className={pageNumber === currentPage ? "active" : ""}
-          >
+          <li key={pageNumber}>
             <Link to={`/${pageName}/?page=${pageNumber}`}>
-              <button onClick={() => onPageChange(pageNumber)}>
+              <button
+                onClick={() => onPageChange(pageNumber)}
+                className={
+                  pageNumber === currentPage
+                    ? "paginationItem paginationItemActive"
+                    : "paginationItem"
+                }
+              >
                 {pageNumber}
               </button>
             </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }
 

@@ -4026,25 +4026,28 @@ table.dataTable > thead .sorting_desc_disabled:before {
 
 .custom-select {
   min-width: 80px;
-  /* background: url(../img/icons/dropdown.svg) no-repeat 95% 50%; */
 }
 
 .pagination li {
   margin: 0 5px;
 }
-.pagination li a {
-  border-radius: 5px;
-  background: #637381;
-  color: #fff;
+
+.paginationItem {
+  border-radius: 3px;
+  width: 34px;
+  height: 34px;
+  background-color: #444;
+  border:1px solid #ccc;
+  color:#fff;
+  font-weight: bold;
 }
-.pagination li a:hover {
-  background: #ff9f43;
-  color: #fff;
+
+.paginationItemActive {
+  background-color: #18b0e9;
 }
-.pagination li.active a.page-link {
-  background: #ff9f43;
-  border-color: #ff9f43;
-  border-radius: 5px;
+
+.paginationItem:hover{
+  background: #777;
 }
 
 .dataTables_length,
@@ -10255,15 +10258,15 @@ label {
 
 .activityButton {
   background: #fff;
-  margin-top:2px;
-  padding:10px;
-  width:36px;
-  height:36px;
+  margin-top: 2px;
+  padding: 10px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  box-shadow: 0px 2px 4px 0px rgb(0, 0, 0,0.24) ;
+  box-shadow: 0px 2px 4px 0px rgb(0, 0, 0, 0.24);
 }
 
 .activityButton:hover {
@@ -10330,7 +10333,7 @@ label {
 }
 
 .photoCardTitle {
-  background-color: rgba(0, 0, 0, 0.70);
+  background-color: rgba(0, 0, 0, 0.7);
   width: 100%;
   overflow: hidden;
   font-size: 16px;
@@ -10338,7 +10341,7 @@ label {
   position: absolute;
   left: 0;
   bottom: 0;
-  color:#fff;
+  color: #fff;
   font-weight: bold;
 }
 
@@ -10574,29 +10577,28 @@ label {
   color: #fa8a07 !important;
 }
 
-.successMessage{
+.successMessage {
   font-weight: bold;
   color: #0f9d58;
   font-size: 17px;
-  background:#f1f1f1;
+  background: #f1f1f1;
   width: fit-content;
-  padding:12px;
-  float:left;
+  padding: 12px;
+  float: left;
   text-align: left;
-  left:0
+  left: 0;
 }
 
-.previewImg{
-  width:180px;
-  margin-right:8px;
-  margin-bottom:8px;
+.previewImg {
+  width: 180px;
+  margin-right: 8px;
+  margin-bottom: 8px;
 }
 
-.previewImgContainer{
+.previewImgContainer {
   display: flex;
   flex-wrap: wrap;
 }
 
 /*# sourceMappingURL=style.css.map */
-
 /* end  dashboard css */

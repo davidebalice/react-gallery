@@ -27,12 +27,27 @@
   z-index: 1;
 }
 
-.headerContainer{
+.headerContainer {
   display: flex;
   justify-content: space-between;
 }
 
-.github{
-  height:38px;
-  margin-right:20px
+.github {
+  height: 38px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.footer {
+  background: #111;
+  padding: 12px;
+  color: #fff;
+}
+
+.footerLink {
+  color: #fff !important;
+}
+
+.wrapper {
+  min-height: calc(100vh - 200px);
 }

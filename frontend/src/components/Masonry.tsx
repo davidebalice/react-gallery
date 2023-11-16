@@ -1,15 +1,23 @@
-import React, { useState } from "react";
-import images from "../data/products";
+import React, { useState, useEffect } from "react";
 import Masonry from "react-masonry-css";
 import PhotoModal from "./PhotoModal";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 
 const breakpointColumnsObj = {
   default: 5,
 };
 
 const MasonryGallery = () => {
+  const token = localStorage.getItem("authToken");
   const [selectedImage, setSelectedImage] = useState("");
+  interface ImageData {
+    _id: string;
+    photo: string;
+    name: string;
+  }
+
+  const [images, setImages] = useState<ImageData[]>([]);
 
   const openImage = (photo: string) => {
     setSelectedImage(photo);
@@ -18,6 +26,28 @@ const MasonryGallery = () => {
   const closeImage = () => {
     setSelectedImage("");
   };
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/gallery/654e5aa0bbd8b8c664a5598e?limit=60`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        console.log("response.data.gallery");
+        console.log(response.data.gallery);
+        setImages(response.data.gallery);
+      })
+      .catch((error) => {
+        console.error("Error during api call:", error);
+      });
+  }, []);
 
   return (
     <>
@@ -29,10 +59,10 @@ const MasonryGallery = () => {
         {images.map((image, index) => (
           <div key={index} className="masonryGridItem">
             <img
-              src={image.photo}
+              src={`${process.env.REACT_APP_BACKEND_URL}/api/gallery/photo/${image.photo}`}
               alt={` ${index}`}
               className="masonryImg"
-              onClick={() => openImage(image.photo)}
+              onClick={() => openImage(`${process.env.REACT_APP_BACKEND_URL}/api/gallery/photo/${image.photo}`)}
             />
           </div>
         ))}

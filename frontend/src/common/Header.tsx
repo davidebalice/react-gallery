@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "./Header.module.css";
 import logo from "./../assets/img/logo.png";
 import github from "./../assets/img/github2.png";
 import Menu from "../components/Menu";
+import GithubModal from "../components/GithubModal";
 
 interface MenuProps {
   setType: (type: string) => void;
 }
 
 const Header: React.FC<MenuProps> = ({ setType }) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <>
       <header className={classes.header}>
@@ -21,21 +32,21 @@ const Header: React.FC<MenuProps> = ({ setType }) => {
                     <img src={logo} alt="db logo" className={classes.logo} />
                   </div>
                   <div className={classes.logoContainer}>
-                    <a
-                      href="https://github.com/davidebalice/react-gallery"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <img src={github} alt="db logo" className={classes.github} />
-                    </a>
+                    <img
+                      src={github}
+                      alt="db logo"
+                      className={classes.github}
+                      onClick={openModal}
+                    />
                   </div>
                 </div>
-                <Menu setType={setType} />
+                <Menu setType={setType} openModal={openModal} />
               </div>
             </div>
           </div>
         </div>
       </header>
+      <GithubModal show={showModal} close={closeModal} />
     </>
   );
 };

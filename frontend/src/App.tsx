@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Header from "./common/Header";
+import Footer from "./common/Footer";
+import Wrapper from "./common/Wrapper";
 import Gallery from "./components/Gallery";
 import Masonry from "./components/Masonry";
 import Slideshow from "./components/Slideshow";
@@ -11,7 +13,8 @@ function App() {
 
   return (
     <div className="App">
-      <Header setType={setType} />  
+      <Header setType={setType} /> 
+      <Wrapper>
       {type === "Gallery" ? (
         <>
           <Gallery />
@@ -25,6 +28,8 @@ function App() {
           <Slideshow />
         </>
       )}
+       </Wrapper>
+      <Footer />
     </div>
   );
 }
