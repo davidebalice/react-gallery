@@ -6,6 +6,10 @@ interface MenuProps {
   openModal: React.MouseEventHandler<HTMLButtonElement>;
 }
 
+const adminPanelUrl = process.env.REACT_APP_ADMIN_PANEL_URL;
+
+console.log(adminPanelUrl);
+
 const Menu: React.FC<MenuProps> = ({ setType, openModal }) => {
   const handleGalleryClick = () => {
     setType("Gallery");
@@ -30,7 +34,7 @@ const Menu: React.FC<MenuProps> = ({ setType, openModal }) => {
       <Button onClick={handleSlideshowClick} className="button">
         Slideshow
       </Button>
-      <a href="http:/localhost:3000" target="_blank" rel="noreferrer">
+      <a href={adminPanelUrl} target="_blank" rel="noreferrer">
         <Button className="button">Backend</Button>
       </a>
       <Button onClick={openModal} className="button">
