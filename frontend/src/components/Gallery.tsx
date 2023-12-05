@@ -4,7 +4,6 @@ import { Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 
 const Gallery = () => {
-  const token = localStorage.getItem("authToken");
   const [selectedImage, setSelectedImage] = useState("");
   interface ImageData {
     _id: string;
@@ -25,10 +24,9 @@ const Gallery = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/gallery/654e5a95bbd8b8c664a55978?limit=60`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/images/654e5a95bbd8b8c664a55978?limit=60`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },

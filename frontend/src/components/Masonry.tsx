@@ -9,7 +9,6 @@ const breakpointColumnsObj = {
 };
 
 const MasonryGallery = () => {
-  const token = localStorage.getItem("authToken");
   const [selectedImage, setSelectedImage] = useState("");
   interface ImageData {
     _id: string;
@@ -30,10 +29,9 @@ const MasonryGallery = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/gallery/654e5aa0bbd8b8c664a5598e?limit=60`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/images/654e5aa0bbd8b8c664a5598e?limit=60`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
