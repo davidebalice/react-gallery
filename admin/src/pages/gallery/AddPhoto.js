@@ -1,17 +1,17 @@
-import { useState, useContext, useRef, useEffect } from "react";
-import { Context } from "../../context/UserContext";
-import axios from "axios";
-import Swal from "sweetalert2";
-import Breadcrumb from "../../components/breadcrumb/index";
-import Spacer from "../../components/spacer";
-import Divider from "../../components/divider/";
-import Loading from "../../components/loading";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleChevronLeft,
   faCirclePlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import Breadcrumb from "../../components/breadcrumb/index";
+import Divider from "../../components/divider/";
+import Loading from "../../components/loading";
+import Spacer from "../../components/spacer";
+import { Context } from "../../context/UserContext";
 
 const AddPhoto = () => {
   const navigate = useNavigate();
@@ -49,8 +49,8 @@ const AddPhoto = () => {
         },
       })
       .then((response) => {
-        console.log("response.data.categories");
-        console.log(response.data.categories);
+        //console.log("response.data.categories");
+        //console.log(response.data.categories);
         setFormData({ ...formData, categories: response.data.categories });
       })
       .catch((error) => {
@@ -82,10 +82,6 @@ const AddPhoto = () => {
   };
 
   useEffect(() => {
-    /*
-    setFormData({
-      ...formData,
-    });*/
     setLoading(false);
   }, []);
 
@@ -113,14 +109,10 @@ const AddPhoto = () => {
           }
         )
         .then((response) => {
-          console.log("response.data.message");
-          console.log(response.data.message);
+          //console.log("response.data.message");
+          //console.log(response.data.message);
           setLoading(false);
-          setFormData({
-            ...formData,
-            photo: "",
-            message: response.data.message,
-          });
+          setFormData({ ...formData, photo: "", message: "Photo uploaded" });
 
           if (inputFileRef.current) {
             inputFileRef.current.value = "";
@@ -143,11 +135,11 @@ const AddPhoto = () => {
             <Link
               to={
                 formData.category_id
-                  ? `/gallery/${formData.category_id}`
+                  ? `/gallery`
                   : "/gallery"
               }
             >
-              <div class="backButton col-sm-4 col-md-4 col-lg-3">
+              <div className="backButton col-sm-4 col-md-4 col-lg-3">
                 <FontAwesomeIcon
                   icon={faCircleChevronLeft}
                   className="backButtonIcon"
@@ -160,8 +152,8 @@ const AddPhoto = () => {
               {formData.message && (
                 <p className="successMessage">{formData.message}</p>
               )}
-              <form enctype="multipart/form-data" method="post" id="formUpload">
-                <label for="name">
+              <form encType="multipart/form-data" method="post" id="formUpload">
+                <label>
                   <b>Category</b>
                 </label>
                 <Spacer height={10} />

@@ -13,6 +13,7 @@
     "bootstrap": "^5.3.0",
     "boxicons": "^2.1.4",
     "dotenv": "^16.3.1",
+    "gallery-admin": "file:",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",

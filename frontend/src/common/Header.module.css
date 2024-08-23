@@ -20,6 +20,12 @@
   padding: 21px 0 21px 0;
 }
 
+@media (max-width: 768px) {
+  .githubContainer {
+    display: none;
+  }
+}
+
 .header {
   width: 100%;
   -webkit-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.23);

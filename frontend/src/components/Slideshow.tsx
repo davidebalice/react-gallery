@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  BsFillArrowRightSquareFill,
-  BsFillArrowLeftSquareFill,
-} from "react-icons/bs";
 import axios from "axios";
-
-const delay = 3500;
+import { useEffect, useRef, useState } from "react";
+import {
+  BsFillArrowLeftSquareFill,
+  BsFillArrowRightSquareFill,
+} from "react-icons/bs";
+import spinner from "../assets/img/spinner.svg";
 
 const Slideshow = () => {
+  const delay = 3500;
   const [index, setIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   function resetTimeout() {
@@ -66,6 +67,7 @@ const Slideshow = () => {
         console.log("response.data.gallery");
         console.log(response.data.gallery);
         setImages(response.data.gallery);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error during api call:", error);
@@ -77,34 +79,52 @@ const Slideshow = () => {
       <div className="slideshow">
         <div className="slideButtons">
           <BsFillArrowLeftSquareFill onClick={prev} className="slideButton" />
-          <BsFillArrowRightSquareFill onClick={next} className="slideButton"/>
+          <BsFillArrowRightSquareFill onClick={next} className="slideButton" />
         </div>
 
-        <div
-          className="slideshowSlider"
-          style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
-        >
-          {images.map((image, index) => (
-            <div className="slide" key={index}>
-              <img src={`${process.env.REACT_APP_BACKEND_URL}/api/gallery/photo/${image.photo}`} alt={image.name} className="slideImg" />
-            </div>
-          ))}
-        </div>
-
-        <div className="slideThumbs">
-          {images.map((image, id) => (
+        {loading && (
+          <div className="spinner">
+            <img src={spinner} alt="spinner" />
+          </div>
+        )}
+        {!loading && images && (
+          <>
+            {" "}
             <div
-              key={id}
-              className={`slideThumbWrapper${index === id ? " active" : ""}`}
-              onClick={() => {
-                setIndex(id);
-              }}
+              className="slideshowSlider"
+              style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
             >
-              {" "}
-              <img src={`${process.env.REACT_APP_BACKEND_URL}/api/gallery/photo/${image.photo}`} alt={image.name} className="slideThumb" />
+              {images.map((image, index) => (
+                <div className="slide" key={index}>
+                  <img
+                    src={`${process.env.REACT_APP_BACKEND_URL}/api/images/photo/${image.photo}`}
+                    alt={image.name}
+                    className="slideImg"
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+            <div className="slideThumbs">
+              {images.map((image, id) => (
+                <div
+                  key={id}
+                  className={`slideThumbWrapper${
+                    index === id ? " active" : ""
+                  }`}
+                  onClick={() => {
+                    setIndex(id);
+                  }}
+                >
+                  <img
+                    src={`${process.env.REACT_APP_BACKEND_URL}/api/images/thumb/${image.photo}`}
+                    alt={image.name}
+                    className="slideThumb"
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

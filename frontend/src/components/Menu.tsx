@@ -11,27 +11,34 @@ const adminPanelUrl = process.env.REACT_APP_ADMIN_PANEL_URL;
 console.log(adminPanelUrl);
 
 const Menu: React.FC<MenuProps> = ({ setType, openModal }) => {
-  const handleGalleryClick = () => {
-    setType("Gallery");
-  };
-
-  const handleMasonryClick = () => {
-    setType("Masonry");
-  };
-
-  const handleSlideshowClick = () => {
-    setType("Slideshow");
+  const handleChangePage = (page: string) => {
+    setType(page);
   };
 
   return (
     <div className="menu">
-      <Button onClick={handleGalleryClick} className="button">
+      <Button
+        onClick={() => {
+          handleChangePage("Gallery");
+        }}
+        className="button"
+      >
         Gallery
       </Button>
-      <Button onClick={handleMasonryClick} className="button">
+      <Button
+        onClick={() => {
+          handleChangePage("Masonry");
+        }}
+        className="button"
+      >
         Masonry
       </Button>
-      <Button onClick={handleSlideshowClick} className="button">
+      <Button
+        onClick={() => {
+          handleChangePage("Slideshow");
+        }}
+        className="button"
+      >
         Slideshow
       </Button>
       <a href={adminPanelUrl} target="_blank" rel="noreferrer">

@@ -193,6 +193,10 @@
   .slideshow {
     max-width: 90%;
   }
+  .slideshowPage {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .slideshowSlider {
@@ -221,6 +225,8 @@
 .slideThumbs {
   justify-content: center;
   display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 .slideThumbWrapper {
@@ -269,4 +275,98 @@
 .githubText1 {
   font-weight: bold;
   font-size: 20px;
+}
+
+.pagination {
+  padding: 20px;
+  width: fit-content !important;
+  text-align: center;
+  display: flex !important;
+  flex-direction: row !important;
+  margin: 0 auto;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button {
+  background-color: #222;
+  font-weight: bold;
+  border: none;
+}
+
+.pagination button:hover {
+  background-color: #555;
+}
+
+.pagination button:disabled {
+  background-color: #999;
+}
+
+.sidemenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  display: none;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.sidemenu.open {
+  transform: translateX(0);
+}
+
+.sidemenu-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #555;
+}
+
+.sidemenu-logo {
+  width: 40%;
+  text-align: left;
+}
+
+.hamburger-icon {
+  display: none;
+  font-size: 40px;
+  align-items: center;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.close-icon {
+  font-size: 50px;
+  float: right;
+  color: #fff;
+  text-align: right;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.spinner {
+  text-align: center;
+  margin-top: 200px;
+}
+
+@media (max-width: 768px) {
+  .sidemenu {
+    display: flex;
+  }
+  .menu {
+    display: none;
+  }
+  .hamburger-icon {
+    display: block;
+  }
 }

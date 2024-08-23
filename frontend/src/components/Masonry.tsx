@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import Masonry from "react-masonry-css";
-import PhotoModal from "./PhotoModal";
-import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect, useState } from "react";
+import Masonry from "react-masonry-css";
+import spinner from "../assets/img/spinner.svg";
+import PhotoModal from "./PhotoModal";
 
 const breakpointColumnsObj = {
   default: 5,
@@ -10,6 +11,7 @@ const breakpointColumnsObj = {
 
 const MasonryGallery = () => {
   const [selectedImage, setSelectedImage] = useState("");
+  const [loading, setLoading] = useState(true);
   interface ImageData {
     _id: string;
     photo: string;
@@ -41,6 +43,7 @@ const MasonryGallery = () => {
         console.log("response.data.gallery");
         console.log(response.data.gallery);
         setImages(response.data.gallery);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error during api call:", error);
@@ -49,22 +52,37 @@ const MasonryGallery = () => {
 
   return (
     <>
-      <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className="masonryGrid mt-4"
-        columnClassName="masonryColumn"
-      >
-        {images.map((image, index) => (
-          <div key={index} className="masonryGridItem">
-            <img
-              src={`${process.env.REACT_APP_BACKEND_URL}/api/gallery/photo/${image.photo}`}
-              alt={` ${index}`}
-              className="masonryImg"
-              onClick={() => openImage(`${process.env.REACT_APP_BACKEND_URL}/api/gallery/photo/${image.photo}`)}
-            />
-          </div>
-        ))}
-      </Masonry>
+      {loading && (
+        <div className="spinner">
+          <img src={spinner} alt="spinner" />
+        </div>
+      )}
+      {!loading && images && (
+        <>
+          {" "}
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="masonryGrid mt-4"
+            columnClassName="masonryColumn"
+          >
+            {images.map((image, index) => (
+              <div key={index} className="masonryGridItem">
+                <img
+                  src={`${process.env.REACT_APP_BACKEND_URL}/api/images/thumb/${image.photo}`}
+                  alt={` ${index}`}
+                  className="masonryImg"
+                  onClick={() =>
+                    openImage(
+                      `${process.env.REACT_APP_BACKEND_URL}/api/images/photo/${image.photo}`
+                    )
+                  }
+                />
+              </div>
+            ))}
+          </Masonry>
+        </>
+      )}
+
       <PhotoModal selectedImage={selectedImage} closeImage={closeImage} />
     </>
   );

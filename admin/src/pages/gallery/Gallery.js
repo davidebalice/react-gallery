@@ -1,23 +1,22 @@
-import { useState, useEffect, useContext } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import {
+  faCirclePlus,
+  faPenToSquare,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { Context } from "../../context/UserContext";
-import Breadcrumb from "../../components/breadcrumb/index";
+import { useContext, useEffect, useState } from "react";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import Breadcrumb from "../../components/breadcrumb/index";
 import Loading from "../../components/loading";
 import EditModal from "../../components/Modal/EditModal";
 import PhotoModal from "../../components/Modal/PhotoModal";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import Spacer from "../../components/spacer";
 import Pagination from "../../components/pagination/Pagination";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPenToSquare,
-  faTrash,
-  faCirclePlus,
-} from "@fortawesome/free-solid-svg-icons";
+import Spacer from "../../components/spacer";
+import { Context } from "../../context/UserContext";
 
 const Gallery = () => {
   const { id } = useParams();
@@ -228,7 +227,7 @@ const Gallery = () => {
                               <img
                                 src={`${
                                   process.env.REACT_APP_API_BASE_URL
-                                }/api/gallery/photo/${photo && photo.photo}`}
+                                }/api/gallery/thumb/${photo && photo.photo}`}
                                 alt=""
                                 className="photoImg"
                                 onClick={() =>
@@ -300,7 +299,7 @@ const Gallery = () => {
                 </div>
               </div>
             </div>
-            
+
             {data && (
               <Pagination
                 pageName="gallery"
