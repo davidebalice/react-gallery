@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 
 interface MenuProps {
   setType: (type: string) => void;
@@ -17,36 +16,44 @@ const Menu: React.FC<MenuProps> = ({ setType, openModal }) => {
 
   return (
     <div className="menu">
-      <Button
+      <div
         onClick={() => {
           handleChangePage("Gallery");
         }}
         className="button"
       >
         Gallery
-      </Button>
-      <Button
+      </div>
+      <div
         onClick={() => {
           handleChangePage("Masonry");
         }}
         className="button"
       >
         Masonry
-      </Button>
-      <Button
+      </div>
+      <div
         onClick={() => {
           handleChangePage("Slideshow");
         }}
         className="button"
       >
         Slideshow
-      </Button>
+      </div>
+      <div
+        onClick={() => {
+          handleChangePage("3D");
+        }}
+        className="button"
+      >
+        3D
+      </div>
       <a href={adminPanelUrl} target="_blank" rel="noreferrer">
-        <Button className="button">Backend</Button>
+        <div className="button">Backend</div>
       </a>
-      <Button onClick={openModal} className="button">
+      <div onClick={()=>openModal} className="button">
         Github
-      </Button>
+      </div>
     </div>
   );
 };

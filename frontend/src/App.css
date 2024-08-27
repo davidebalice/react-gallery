@@ -1,3 +1,7 @@
+a {
+  text-decoration: none !important;
+}
+
 .App {
   text-align: center;
 }
@@ -369,4 +373,76 @@
   .hamburger-icon {
     display: block;
   }
+}
+
+.button {
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+}
+
+.button-sidemenu {
+  text-decoration: none;
+  color: #fff;
+  padding: 4px 20px;
+  cursor: pointer;
+}
+
+.button-sidemenu:hover {
+  color: #f1f1f1;
+}
+
+.button-paging {
+  text-decoration: none;
+  color: #fff;
+  background-color: #444;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 6px;
+}
+
+.button-paging:hover {
+  text-decoration: none;
+  color: #fff;
+  background-color: #999;
+  cursor: pointer;
+}
+
+.disabled {
+  background-color: #aaa;
+}
+
+.category-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.category-item {
+  padding: 8px;
+  margin: 5px 0;
+  min-width: 130px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 800px) {
+  .category-item {
+    font-size: 13px;
+    min-width: 90px;
+  }
+}
+
+.category-item.selected {
+  background-color: #b6c0c9;
+  color: white;
+}
+
+.category-item:hover {
+  background-color: #f1f1f1;
 }

@@ -7,6 +7,7 @@ import PhotoModal from "./PhotoModal";
 
 const breakpointColumnsObj = {
   default: 5,
+  768: 2,
 };
 
 const MasonryGallery = () => {

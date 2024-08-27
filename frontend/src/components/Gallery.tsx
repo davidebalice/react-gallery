@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
-import PhotoModal from "./PhotoModal";
+import { Col, Container, Row } from "react-bootstrap";
 import spinner from "../assets/img/spinner.svg";
+import Categories from "./Categories";
+import PhotoModal from "./PhotoModal";
 
 const Gallery = () => {
   interface ImageData {
@@ -15,6 +16,9 @@ const Gallery = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(
+    "654e5a95bbd8b8c664a55978"
+  );
 
   const openImage = (photo: string) => {
     setSelectedImage(photo);
@@ -27,7 +31,7 @@ const Gallery = () => {
   const fetchImages = (page: number) => {
     axios
       .get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/images/654e5a95bbd8b8c664a55978?limit=12&page=${page}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/images/${selectedCategory}?limit=12&page=${page}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -48,7 +52,7 @@ const Gallery = () => {
 
   useEffect(() => {
     fetchImages(currentPage);
-  }, [currentPage]);
+  }, [currentPage, selectedCategory]);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -62,12 +66,26 @@ const Gallery = () => {
     }
   };
 
+  interface CategoriesProps {
+    selectedCategory: string;
+    setSelectedCategory: (category: string) => void;
+  }
+
   return (
     <>
-      <Container fluid className="mt-4">
+      <Container fluid className="mt-0">
+        <Categories
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
         <Row>
-          {loading && (<div className="spinner"><img src={spinner} alt="spinner"/></div>)}
-          {!loading && images &&
+          {loading && (
+            <div className="spinner">
+              <img src={spinner} alt="spinner" />
+            </div>
+          )}
+          {!loading &&
+            images &&
             images.map((image: ImageData, index: number) => (
               <Col key={index} xs={12} sm={6} md={3} className="col">
                 <div className="imageContainer">
@@ -88,25 +106,25 @@ const Gallery = () => {
         </Row>
         {!loading && images && (
           <div className="pagination">
-            <Button
-              variant="primary"
+            <div
               onClick={handlePreviousPage}
-              disabled={currentPage === 1}
+              className={`button-paging ${currentPage === 1 ? "disabled" : ""}`}
             >
               {"<<"}
-            </Button>
+            </div>
 
             <span>
               Page {currentPage} of {totalPages}
             </span>
 
-            <Button
-              variant="primary"
+            <div
               onClick={handleNextPage}
-              disabled={currentPage === totalPages}
+              className={`button-paging ${
+                currentPage === totalPages ? "disabled" : ""
+              }`}
             >
               {">>"}
-            </Button>
+            </div>
           </div>
         )}
       </Container>

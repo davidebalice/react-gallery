@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
 import { FaBars, FaTimes } from "react-icons/fa";
 import logo from "./../assets/img/logoWhite.png";
 
@@ -13,7 +12,6 @@ const adminPanelUrl = process.env.REACT_APP_ADMIN_PANEL_URL;
 console.log(adminPanelUrl);
 
 const Sidemenu: React.FC<MenuProps> = ({ setType, openModal }) => {
- 
   const handleChangePage = (page: string) => {
     setType(page);
     setIsOpen(!isOpen);
@@ -32,29 +30,52 @@ const Sidemenu: React.FC<MenuProps> = ({ setType, openModal }) => {
       </div>
       <div className={`sidemenu ${isOpen ? "open" : ""}`}>
         <div className="sidemenu-header">
-          <div style={{textAlign:"left"}}>
+          <div style={{ textAlign: "left" }}>
             <img src={logo} alt="db logo" className="sidemenu-logo" />
           </div>
           <div>
             <FaTimes className="close-icon" onClick={toggleSidebar} />
           </div>
         </div>
-
-        <Button onClick={()=>{handleChangePage("Gallery")}} className="button">
+        <br />
+        <div
+          onClick={() => {
+            handleChangePage("Gallery");
+          }}
+          className="button-sidemenu"
+        >
           Gallery
-        </Button>
-        <Button onClick={()=>{handleChangePage("Masonry")}} className="button">
+        </div>
+        <div
+          onClick={() => {
+            handleChangePage("Masonry");
+          }}
+          className="button-sidemenu"
+        >
           Masonry
-        </Button>
-        <Button onClick={()=>{handleChangePage("Slideshow")}} className="button">
+        </div>
+        <div
+          onClick={() => {
+            handleChangePage("Slideshow");
+          }}
+          className="button-sidemenu"
+        >
           Slideshow
-        </Button>
+        </div>
+        <div
+          onClick={() => {
+            handleChangePage("Gallery3d");
+          }}
+          className="button-sidemenu"
+        >
+          3D
+        </div>
         <a href={adminPanelUrl} target="_blank" rel="noreferrer">
-          <Button className="button">Backend</Button>
+          <div className="button-sidemenu">Backend</div>
         </a>
-        <Button onClick={openModal} className="button">
+        <div onClick={() => openModal} className="button-sidemenu">
           Github
-        </Button>
+        </div>
       </div>
     </>
   );
