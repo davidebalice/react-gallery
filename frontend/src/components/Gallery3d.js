@@ -9,6 +9,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import axios from "axios";
 import { easing } from "maath";
 import { useEffect, useRef, useState } from "react";
+import { isMobile } from "react-device-detect";
 import * as THREE from "three";
 import getUuid from "uuid-by-string";
 import { useLocation, useRoute } from "wouter";
@@ -21,11 +22,20 @@ export const Gallery3d = () => {
 
   const calculateZoom = () => {
     const { innerWidth } = window;
-    if (innerWidth < 800) return 9;
-    if (innerWidth < 1000) return 8;
+    if (innerWidth < 800) return 11;
+    if (innerWidth < 1000) return 10;
     if (innerWidth < 1300) return 7;
     if (innerWidth < 1600) return 6;
     return 5.2;
+  };
+
+  const handleZoomChange = (action) => {
+    setZoom((prev) => {
+      const newZoom = action === "in" ? prev + 1 : prev - 1;
+      const minZoom = 3;
+      const maxZoom = 17;
+      return Math.min(Math.max(newZoom, minZoom), maxZoom);
+    });
   };
 
   useEffect(() => {
@@ -83,44 +93,62 @@ export const Gallery3d = () => {
   }, []);
 
   return (
-    <Canvas
-      dpr={[1, 1.5]}
-      camera={{ fov: 70, position: [0, 2, 15] }}
-      style={{
-        height: "calc(100vh - 200px)",
-        width: "100%",
-      }}
-    >
-      <color attach="background" args={["#191920"]} />
-      <fog attach="fog" args={["#191920", 0, 15]} />
-      <group position={[0, -0.5, 0]}>
-        <Frames
-          images={images}
-          ratio={ratio}
-          setRatio={setRatio}
-          zoom={zoom}
-          setControlsEnabled={setControlsEnabled}
-          controlsEnabled={controlsEnabled}
-        />
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[50, 50]} />
-          <MeshReflectorMaterial
-            blur={[300, 100]}
-            resolution={2048}
-            mixBlur={1}
-            mixStrength={80}
-            roughness={1}
-            depthScale={1.2}
-            minDepthThreshold={0.4}
-            maxDepthThreshold={1.4}
-            color="#050505"
-            metalness={0.5}
+    <>
+      <div className="zoomContainer">
+        <div className="zoomContainerTitle">Zoom</div>
+        <div
+          className="zoomContainerButton"
+          onClick={() => handleZoomChange("out")}
+        >
+          +
+        </div>
+        <div
+          className="zoomContainerButton"
+          onClick={() => handleZoomChange("in")}
+        >
+          -
+        </div>
+      </div>
+      <Canvas
+        dpr={[1, 1.2]}
+        camera={{ fov: 70, position: [0, 2, 15] }}
+        style={{
+          height: "calc(100vh - 200px)",
+          width: "100%",
+        }}
+        gl={{ antialias: !isMobile }}
+      >
+        <color attach="background" args={["#191920"]} />
+        <fog attach="fog" args={["#191920", 0, 15]} />
+        <group position={[0, -0.5, 0]}>
+          <Frames
+            images={images}
+            ratio={ratio}
+            setRatio={setRatio}
+            zoom={zoom}
+            setControlsEnabled={setControlsEnabled}
+            controlsEnabled={controlsEnabled}
           />
-        </mesh>
-      </group>
-      <Environment preset="city" />
-      {controlsEnabled && <OrbitControls />}
-    </Canvas>
+          <mesh rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[50, 50]} />
+            <MeshReflectorMaterial
+              blur={[300, 100]}
+              resolution={1024}
+              mixBlur={1}
+              mixStrength={80}
+              roughness={1}
+              depthScale={1.2}
+              minDepthThreshold={0.4}
+              maxDepthThreshold={1.4}
+              color="#050505"
+              metalness={0.5}
+            />
+          </mesh>
+        </group>
+        <Environment preset="city" />
+        {controlsEnabled && <OrbitControls enableZoom={false} />}
+      </Canvas>{" "}
+    </>
   );
 };
 
